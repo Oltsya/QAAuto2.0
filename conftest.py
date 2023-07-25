@@ -29,4 +29,8 @@ def user():
 @pytest.fixture
 def github_api():
     api = GitHub()
+    # Personal Authorization
+    """headers = {
+        "Authorization": "Bearer N9soY5IC9IUwLuOu35qtrbtIU8jmmSySdU5Z3qHyt1CabMDjL3E5PxjkFYDaMLXdb_vTvU6UnYF-hudfgIfQ5g"
+    }"""
     yield api

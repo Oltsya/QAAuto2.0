@@ -38,9 +38,8 @@ def test_repo_with_single_char_be_found(github_api):
 
 
 @pytest.mark.api
-def test_get_emojis(github_api):
-    r = github_api.get_emojis()
-    # print(r)
+def test_get_emojis_status_code(github_api):
+    r = github_api.get_emojis_http_response()
 
     assert r.status_code == 200
 
@@ -60,3 +59,31 @@ def test_get_emojis_proper_url(github_api):
         r["1st_place_medal"]
         == "https://github.githubassets.com/images/icons/emoji/unicode/1f947.png?v8"
     )
+
+
+@pytest.mark.api
+def test_list_commits_status_code(github_api):
+    r = github_api.list_commits_http_response("Oltsya", "QAAuto2.0")
+
+    assert r.status_code == 200
+
+
+@pytest.mark.api
+def test_list_commits_check_existence(github_api):
+    r = github_api.list_commits("Oltsya", "QAAuto2.0")
+
+    assert len(r) > 0
+
+
+@pytest.mark.api
+def test_list_commits_check_author(github_api):
+    r = github_api.list_commits("Oltsya", "QAAuto2.0")
+
+    assert r[0]["commit"]["author"]["name"] == "Olha Fedak"
+
+
+@pytest.mark.api
+def test_list_commits_check_comitter_email(github_api):
+    r = github_api.list_commits("Oltsya", "QAAuto2.0")
+
+    assert r[0]["commit"]["committer"]["email"] == "onyskivo@gmail.com"
