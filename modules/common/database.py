@@ -52,7 +52,6 @@ class Database:
         self.cursor.execute(query)
         self.connection.commit()
 
-    # Використовуючи команду JOIN та таблиці orders, customers, products, повернути із таблиці orders наступну інформацію у відповідному порядку: унікальний номер замовлення, ім’я покупця, ім’я замовленого продукту, опис замовленого продукту, дату замовлення
     def get_detailed_orders(self):
         query = "SELECT orders.id, customers.name, products.name, products.description, orders.order_date FROM orders\
             JOIN customers ON orders.customer_id = customers.id\
@@ -61,3 +60,112 @@ class Database:
         record = self.cursor.fetchall()
 
         return record
+
+    # For individual QAAuto task
+    def create_table_discounts(self):
+        query = "CREATE TABLE discounts (\
+            id int NOT NULL,\
+            customer_id int,\
+            order_id int,\
+            sum int,\
+            PRIMARY KEY (id),\
+            FOREIGN KEY (customer_id) REFERENCES customers(id),\
+            FOREIGN KEY (order_id) REFERENCES orders(id))"
+        self.cursor.execute(query)
+        self.connection.commit()
+        table = self.cursor.fetchall()
+
+        return table
+
+    def insert_discounts(self, id, customer_id, order_id, sum):
+        if not all(isinstance(val, int) for val in (id, customer_id, order_id, sum)):
+            raise TypeError("Wrong data type!")
+
+        query = f"INSERT INTO discounts (id, customer_id, order_id, sum)\
+            VALUES ({id}, {customer_id}, {order_id}, {sum})"
+        value = self.cursor.execute(query)
+        self.connection.commit()
+
+        return value
+
+    def get_discounts(self):
+        query = "SELECT * FROM discounts"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+
+        return record
+
+    def update_sum_in_discounts_by_id(self, id, new_sum):
+        if not all(isinstance(val, int) for val in (id, new_sum)):
+            raise TypeError("Wrong data type!")
+        records = self.get_discounts()
+        found_id = False
+
+        for record in records:
+            if record[0] == id:
+                found_id = True
+                break
+
+        if not found_id:
+            raise ValueError(
+                f"Discount with id {id} does not exist in the discounts table!"
+            )
+
+        query = f"UPDATE discounts SET sum = {new_sum} WHERE id = {id}"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def get_sum_in_discounts_by_id(self, id):
+        query = f"SELECT sum FROM discounts WHERE id = {id}"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+
+        return record
+
+    def get_all_records_by_foreign_keys(self):
+        query = "SELECT discounts.id, customers.name, products.name, products.quantity, discounts.sum FROM discounts\
+            JOIN customers ON discounts.customer_id = customers.id\
+            JOIN orders ON discounts.order_id = orders.id\
+            JOIN products ON orders.product_id = products.id"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+
+        return record
+
+    def get_all_records_by_sum(self, sum):
+        records = self.get_discounts()
+        found_sum = False
+
+        for record in records:
+            if record[3] == sum:
+                found_sum = True
+                break
+
+        if not found_sum:
+            raise ValueError(
+                f"Discount with sum {sum} does not exist in the discounts table!"
+            )
+
+        query = f"SELECT discounts.id, customers.name, products.name, products.quantity, discounts.sum FROM discounts\
+            JOIN customers ON discounts.customer_id = customers.id\
+            JOIN orders ON discounts.order_id = orders.id\
+            JOIN products ON orders.product_id = products.id WHERE sum = {sum}"
+        self.cursor.execute(query)
+        record = self.cursor.fetchall()
+
+        return record
+
+    def delete_record_by_id(self, id):
+        query = f"DELETE FROM discounts WHERE id = {id}"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def delete_records_from_discounts(self):
+        query = "DELETE FROM discounts"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def drop_table_discounts(self):
+        query = f"DROP TABLE discounts"
+        self.cursor.execute(query)
+        self.connection.commit
