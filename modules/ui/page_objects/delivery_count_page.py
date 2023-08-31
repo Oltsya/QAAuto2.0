@@ -62,6 +62,7 @@ class DeliveryPage(BasePage):
         floorCount=1,
         backDelivery=0,
     ):
+        expected_price_range = "1,615.00 ... 1,915.00грн"
         sender_city = self.driver.find_element(By.ID, "DeliveryForm_senderCity")
         self.select_city(sender_city, city_from, "delivery_sender_cities")
 
@@ -119,7 +120,6 @@ class DeliveryPage(BasePage):
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "final")))
         total_price = self.driver.find_element(By.CLASS_NAME, "final").text
-        expected_price_range = "1,615.00 ... 1,915.00грн"
 
         assert (
             expected_price_range in total_price

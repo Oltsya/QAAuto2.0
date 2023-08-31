@@ -62,6 +62,8 @@ class Database:
         return record
 
     # For individual QAAuto task
+
+    # Just revise queries on create/delete table
     def create_table_discounts(self):
         query = "CREATE TABLE discounts (\
             id int NOT NULL,\
@@ -78,7 +80,12 @@ class Database:
         return table
 
     def insert_discounts(self, id, customer_id, order_id, sum):
-        if not all(isinstance(val, int) for val in (id, customer_id, order_id, sum)):
+        if (
+            not isinstance(id, int)
+            or not isinstance(customer_id, int)
+            or not isinstance(order_id, int)
+            or not isinstance(sum, int)
+        ):
             raise TypeError("Wrong data type!")
 
         query = f"INSERT INTO discounts (id, customer_id, order_id, sum)\
@@ -96,13 +103,14 @@ class Database:
         return record
 
     def update_sum_in_discounts_by_id(self, id, new_sum):
-        if not all(isinstance(val, int) for val in (id, new_sum)):
+        if not isinstance(id, int) or not isinstance(new_sum, int):
             raise TypeError("Wrong data type!")
         records = self.get_discounts()
         found_id = False
+        id_index = 0
 
         for record in records:
-            if record[0] == id:
+            if record[id_index] == id:
                 found_id = True
                 break
 
@@ -135,9 +143,10 @@ class Database:
     def get_all_records_by_sum(self, sum):
         records = self.get_discounts()
         found_sum = False
+        sum_index = 3
 
         for record in records:
-            if record[3] == sum:
+            if record[sum_index] == sum:
                 found_sum = True
                 break
 

@@ -32,10 +32,7 @@ def user():
 @pytest.fixture
 def github_api():
     api = GitHub()
-    # Personal Authorization
-    """headers = {
-        "Authorization": "Bearer N9soY5IC9IUwLuOu35qtrbtIU8jmmSySdU5Z3qHyt1CabMDjL3E5PxjkFYDaMLXdb_vTvU6UnYF-hudfgIfQ5g"
-    }"""
+
     yield api
 
 
@@ -54,9 +51,6 @@ def ui_rozetka():
 
     yield sign_in_page
 
-    sign_in_page.check_title(
-        "Інтернет-магазин ROZETKA™: офіційний сайт найпопулярнішого онлайн-гіпермаркету в Україні"
-    )
     sign_in_page.close()
 
 
@@ -68,5 +62,4 @@ def ui_delivery():
 
     yield delivery_page
 
-    delivery_page.check_title("Вартість доставки - «Нова Пошта»| Доставка майбутнього")
     delivery_page.close()

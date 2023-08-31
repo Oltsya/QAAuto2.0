@@ -2,6 +2,7 @@ import requests
 
 
 class GitHub:
+    # documentation: https://docs.github.com/en/rest
     def get_user(self, username):
         r = requests.get(f"https://api.github.com/users/{username}")
         body = r.json()
@@ -16,6 +17,7 @@ class GitHub:
 
         return body
 
+    # Methods for individual task
     def get_emojis(self):
         r = self.get_emojis_http_response()
 

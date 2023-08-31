@@ -2,7 +2,7 @@ import pytest
 from modules.ui.page_objects.main_page_rozetka import RozetkaMainPage
 
 
-@pytest.mark.uirozm
+@pytest.mark.uirozetka
 def test_pick_category():
     main_page = RozetkaMainPage()
 
@@ -17,7 +17,7 @@ def test_pick_category():
     )
 
 
-@pytest.mark.uirozm
+@pytest.mark.uirozetka
 def test_filter_by_brand():
     main_page = RozetkaMainPage()
 
@@ -36,7 +36,7 @@ def test_filter_by_brand():
     )
 
 
-"""@pytest.mark.uirozm
+"""@pytest.mark.uirozetka
 def test_prytula_page_open():
     main_page = RozetkaMainPage()
 
